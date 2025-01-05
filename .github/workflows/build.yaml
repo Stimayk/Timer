@@ -42,6 +42,9 @@ jobs:
           cmake -G Ninja -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER="cl" -DCMAKE_CXX_COMPILER="cl"
           cmake --build build
 
+      - name: List build directory (Windows)
+        run: dir ./build
+
       - name: Archive build (Windows)
         uses: actions/upload-artifact@v4
         with:
@@ -69,6 +72,9 @@ jobs:
         run: |
           cmake -G Ninja -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER="clang-15" -DCMAKE_CXX_COMPILER="clang++-15"
           cmake --build build
+
+      - name: List build directory (Linux)
+        run: ls ./build
 
       - name: Archive build (Linux)
         uses: actions/upload-artifact@v4
