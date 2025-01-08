@@ -18,6 +18,23 @@ jobs:
           submodules: recursive
           lfs: false
 
+      - name: Install OpenSSL 3.0.13
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential checkinstall zlib1g-dev
+          curl -O https://www.openssl.org/source/openssl-3.0.13.tar.gz
+          tar -xzf openssl-3.0.13.tar.gz
+          cd openssl-3.0.13
+          ./config --prefix=/usr/local/openssl-3.0.13 --openssldir=/usr/local/openssl-3.0.13
+          make -j$(nproc)
+          sudo make install
+          echo "/usr/local/openssl-3.0.13/lib" | sudo tee -a /etc/ld.so.conf.d/openssl-3.0.13.conf
+          sudo ldconfig
+          export PATH=/usr/local/openssl-3.0.13/bin:$PATH
+
+      - name: Verify OpenSSL version
+        run: openssl version
+
       - name: Update version header
         run: |
           echo "#define VERSION_STRING \"${{ inputs.version }}\"" > ./src/version.h
@@ -37,4 +54,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cs2surf-linux
-          path: ./build/
+          path: ./build/cs2surf.so
