@@ -18,29 +18,20 @@ jobs:
           submodules: recursive
           lfs: false
 
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev
+
       - name: Install OpenSSL 3.0.13
         run: |
-          sudo apt update
-          sudo apt install -y build-essential checkinstall zlib1g-dev
-          wget https://www.openssl.org/source/openssl-3.0.13.tar.gz
+          curl -O https://www.openssl.org/source/openssl-3.0.13.tar.gz
           tar -xzf openssl-3.0.13.tar.gz
           cd openssl-3.0.13
-          ./config --prefix=/usr/local/openssl-3.0.13 --openssldir=/usr/local/openssl-3.0.13
+          ./config --prefix=/usr/local/openssl-3.0.13
           make -j$(nproc)
           sudo make install
           echo "/usr/local/openssl-3.0.13/lib" | sudo tee -a /etc/ld.so.conf.d/openssl-3.0.13.conf
           sudo ldconfig
-          echo "PATH=/usr/local/openssl-3.0.13/bin:\$PATH" | sudo tee -a /etc/environment
-          echo "OPENSSL_ROOT_DIR=/usr/local/openssl-3.0.13" | sudo tee -a /etc/environment
-          echo "OPENSSL_LIBRARIES=/usr/local/openssl-3.0.13/lib" | sudo tee -a /etc/environment
-          source /etc/environment
-
-      - name: Remove old OpenSSL binary
-        run: |
-          sudo mv /usr/bin/openssl /usr/bin/openssl-backup
-
-      - name: Verify OpenSSL version
-        run: /usr/local/openssl-3.0.13/bin/openssl version
+        shell: bash
 
       - name: Update version header
         run: |
@@ -51,7 +42,13 @@ jobs:
 
       - name: Build with CMake
         run: |
-          cmake -G Ninja -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER="clang-15" -DCMAKE_CXX_COMPILER="clang++-15"
+          cmake -G Ninja -B build -S . \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_C_COMPILER="clang-15" \
+            -DCMAKE_CXX_COMPILER="clang++-15" \
+            -DOPENSSL_ROOT_DIR=/usr/local/openssl-3.0.13 \
+            -DOPENSSL_INCLUDE_DIR=/usr/local/openssl-3.0.13/include \
+            -DOPENSSL_LIBRARIES=/usr/local/openssl-3.0.13/lib
           cmake --build build
 
       - name: List build directory (Linux)
