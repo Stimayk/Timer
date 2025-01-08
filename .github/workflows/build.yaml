@@ -11,6 +11,7 @@ jobs:
   build-linux:
     name: Linux
     runs-on: ubuntu-latest
+    container: registry.gitlab.steamos.cloud/steamrt/sniper/sdk
 
     steps:
       - uses: actions/checkout@v4
@@ -18,48 +19,38 @@ jobs:
           submodules: recursive
           lfs: false
 
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev
+      - name: Checkout Metamod
+        uses: actions/checkout@v4
+        with:
+          repository: alliedmodders/metamod-source
+          ref: master
+          path: mmsource-2.0
+          submodules: recursive
 
-      - name: Remove old OpenSSL libraries
-        run: sudo mv /lib/x86_64-linux-gnu/libcrypto.so.3 /lib/x86_64-linux-gnu/libcrypto.so.3.bak
+      - name: Checkout HL2SDK
+        uses: actions/checkout@v4
+        with:
+          repository: alliedmodders/hl2sdk
+          ref: cs2
+          path: hl2sdk-cs2
 
-      - name: Install OpenSSL 3.0.13
+      - name: Checkout AMBuild
+        uses: actions/checkout@v4
+        with:
+          repository: alliedmodders/ambuild
+          path: ambuild
+
+      - name: Install AMBuild
         run: |
-          sudo apt update
-          sudo apt install -y build-essential checkinstall zlib1g-dev
-          wget https://www.openssl.org/source/openssl-3.0.13.tar.gz
-          tar -xzf openssl-3.0.13.tar.gz
-          cd openssl-3.0.13
-          ./config --prefix=/usr/local/openssl-3.0.13 --openssldir=/usr/local/openssl-3.0.13
-          make -j$(nproc)
-          sudo make install
-          echo "/usr/local/openssl-3.0.13/lib" | sudo tee -a /etc/ld.so.conf.d/openssl-3.0.13.conf
-          sudo ldconfig
-          export PATH=/usr/local/openssl-3.0.13/bin:$PATH
-          export LD_LIBRARY_PATH=/usr/local/openssl-3.0.13/lib:$LD_LIBRARY_PATH
-          echo "LD_LIBRARY_PATH=/usr/local/openssl-3.0.13/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
+          cd ambuild && python setup.py install && cd ..
 
-      - name: Verify OpenSSL version
-        run: openssl version
-
-      - name: Update version header
+      - name: Build
+        working-directory: .
+        shell: bash
         run: |
-          echo "#define VERSION_STRING \"${{ inputs.version }}\"" > ./src/version.h
-
-      - name: Setup Ninja
-        uses: seanmiddleditch/gha-setup-ninja@master
-
-      - name: Build with CMake
-        run: |
-          cmake -G Ninja -B build -S . \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_C_COMPILER="clang-15" \
-            -DCMAKE_CXX_COMPILER="clang++-15" \
-            -DOPENSSL_ROOT_DIR=/usr/local/openssl-3.0.13 \
-            -DOPENSSL_INCLUDE_DIR=/usr/local/openssl-3.0.13/include \
-            -DOPENSSL_LIBRARIES=/usr/local/openssl-3.0.13/lib
-          cmake --build build
+          mkdir build && cd build
+          python ../configure.py --enable-optimize --symbol-files --sdks cs2 --hl2sdk-manifests hl2sdk-manifests
+          ambuild
 
       - name: List build directory (Linux)
         run: ls ./build
@@ -68,4 +59,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cs2surf-linux
-          path: ./build/cs2surf.so
+          path: ./build/
