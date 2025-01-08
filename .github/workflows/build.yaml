@@ -35,9 +35,10 @@ jobs:
           sudo ldconfig
           export PATH=/usr/local/openssl-3.0.13/bin:$PATH
           export LD_LIBRARY_PATH=/usr/local/openssl-3.0.13/lib:$LD_LIBRARY_PATH
+          echo "LD_LIBRARY_PATH=/usr/local/openssl-3.0.13/lib:$LD_LIBRARY_PATH" >> $GITHUB_ENV
 
       - name: Verify OpenSSL version
-        run: /usr/local/openssl-3.0.13/bin/openssl version
+        run: openssl version
 
       - name: Update version header
         run: |
