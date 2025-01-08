@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cs2surf-linux
-          path: ./build/cs2surf.so
+          path: ./build/
