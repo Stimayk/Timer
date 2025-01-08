@@ -118,7 +118,7 @@ public:
 private:
 	void ResetMenu() {
 		if (m_pCurrentMenu.IsValid()) {
-			delete m_pCurrentMenu.m_pMenu;
+			m_pCurrentMenu.Free();
 		}
 
 		m_iCurrentPage = 0;

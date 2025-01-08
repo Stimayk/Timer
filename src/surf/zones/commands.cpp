@@ -12,7 +12,7 @@ static void OpenMenu_SelectZoneType(CBasePlayerController* pController) {
 	auto menu = MENU::Create(MENU_CALLBACK_L(player) {
 		auto& pZoneService = player->m_pZoneService;
 		pZoneService->m_ZoneEdit.m_iType = (ZoneType)iItem;
-		pZoneService->m_ZoneEdit.m_iValue = SurfZonePlugin()->GetZoneCount(pZoneService->m_ZoneEdit.m_iTrack, (ZoneType)iItem);
+		pZoneService->m_ZoneEdit.m_iValue = SURF::ZonePlugin()->GetZoneCount(pZoneService->m_ZoneEdit.m_iTrack, (ZoneType)iItem);
 		UTIL::PrintChat(pController, "SELECT: %s, value: %d\n", CSurfZonePlugin::GetZoneNameByType((ZoneType)iItem).c_str(),
 						pZoneService->m_ZoneEdit.m_iValue);
 		pZoneService->m_ZoneEdit.StartEditZone();
@@ -88,10 +88,10 @@ CCMD_CALLBACK(Command_TPStart) {
 		return;
 	}
 
-	player->GetPlayerPawn()->Teleport(&SurfZonePlugin()->m_vecTestStartZone, nullptr, nullptr);
+	player->GetPlayerPawn()->Teleport(&SURF::ZonePlugin()->m_vecTestStartZone, nullptr, nullptr);
 }
 
-void RegisterCommand() {
+void CSurfZonePlugin::RegisterCommand() {
 	CONCMD::RegConsoleCmd("sm_zones", Command_Zones);
 	CONCMD::RegConsoleCmd("sm_editzone", Command_EditZone);
 	CONCMD::RegConsoleCmd("sm_r", Command_TPStart);

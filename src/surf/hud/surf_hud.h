@@ -12,3 +12,7 @@ class CSurfHudService : CSurfBaseService {
 public:
 	using CSurfBaseService::CSurfBaseService;
 };
+
+namespace SURF {
+	extern CSurfHudPlugin* HudPlugin();
+} // namespace SURF

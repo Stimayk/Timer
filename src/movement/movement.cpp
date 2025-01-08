@@ -1,7 +1,6 @@
 #include "movement.h"
 
-template<>
-CMovementForward* CBaseForward<CMovementForward>::m_pFirst = nullptr;
+FORWARD_INIT(CMovementForward);
 
 CMovementPlayer* CMovementPlayerManager::ToPlayer(CServerSideClientBase* pClient) const {
 	return static_cast<CMovementPlayer*>(CPlayerManager::ToPlayer(pClient));

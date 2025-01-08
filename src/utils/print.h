@@ -1,6 +1,7 @@
 #pragma once
 
 #include <pch.h>
+#include <core/logger.h>
 
 enum MsgDest : int32_t {
 	HUD_PRINTNOTIFY = 1,
@@ -30,4 +31,22 @@ namespace UTIL {
 	// Color print
 	void CPrintChat(CBasePlayerController* pControler, const char* format, ...);
 	void CPrintChatAll(const char* format, ...);
+
+	template<typename... Args>
+	std::enable_if_t<sizeof...(Args) == 0, void> Print(CBasePlayerController* pControler, const char* fmt) {
+		if (!pControler) {
+			LOG::Print(fmt);
+		} else {
+			CPrintChat(pControler, "%s\n", fmt);
+		}
+	}
+
+	template<typename... Args>
+	std::enable_if_t<sizeof...(Args) != 0, void> Print(CBasePlayerController* pControler, const char* fmt, Args... args) {
+		if (!pControler) {
+			LOG::Print(fmt, args...);
+		} else {
+			CPrintChat(pControler, fmt, args...);
+		}
+	}
 } // namespace UTIL

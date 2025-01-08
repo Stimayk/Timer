@@ -25,12 +25,11 @@ struct std::hash<CZoneHandle> {
 };
 
 class CSurfZoneService : public CSurfBaseService {
+private:
+	virtual void Reset() override;
+
 public:
 	using CSurfBaseService::CSurfBaseService;
-
-	CZoneEditProperty m_ZoneEdit;
-
-	virtual void Reset() override;
 
 public:
 	void AddZone(const Vector& vecMin, const Vector& vecMax);
@@ -42,12 +41,16 @@ public:
 	static void CreatePoints2D(const Vector& vecMin, const Vector& vecMax, Vector out[4]);
 	static void CreatePoints3D(const Vector& vecMin, const Vector& vecMax, Vector out[8]);
 	static void FillBoxMinMax(Vector& vecMin, Vector& vecMax, bool resize = false);
+
+public:
+	CZoneEditProperty m_ZoneEdit;
 };
 
 class CSurfZonePlugin : CMovementForward, CCoreForward {
-public:
-	std::unordered_map<CZoneHandle, ZoneCache_t> m_hZones;
-	Vector m_vecTestStartZone = {0.0f, 0.0f, 0.0f};
+private:
+	virtual void OnPluginStart() override;
+	virtual void OnPlayerRunCmdPost(CCSPlayerPawn* pawn, const CPlayerButton* buttons, const float (&vec)[3], const QAngle& viewAngles,
+									const int& weapon, const int& cmdnum, const int& tickcount, const int& seed, const int (&mouse)[2]) override;
 
 public:
 	std::optional<ZoneCache_t> FindZone(CBaseEntity* pEnt);
@@ -58,9 +61,13 @@ public:
 	static std::string GetZoneNameByType(ZoneType type);
 
 private:
-	virtual void OnPluginStart() override;
-	virtual void OnPlayerRunCmdPost(CCSPlayerPawn* pawn, const CPlayerButton* buttons, const float (&vec)[3], const QAngle& viewAngles,
-									const int& weapon, const int& cmdnum, const int& tickcount, const int& seed, const int (&mouse)[2]) override;
+	void RegisterCommand();
+
+public:
+	std::unordered_map<CZoneHandle, ZoneCache_t> m_hZones;
+	Vector m_vecTestStartZone = {0.0f, 0.0f, 0.0f};
 };
 
-CSurfZonePlugin* SurfZonePlugin();
+namespace SURF {
+	CSurfZonePlugin* ZonePlugin();
+} // namespace SURF

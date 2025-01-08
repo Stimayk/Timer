@@ -8,12 +8,19 @@ private:
 	virtual void OnPhysicsSimulatePost(CCSPlayerController* pController) override;
 	virtual bool OnEnterZone(const ZoneCache_t& zone, CSurfPlayer* player) override;
 	virtual bool OnStayZone(const ZoneCache_t& zone, CSurfPlayer* player) override;
+
+private:
+	void RegisterCommand();
 };
 
 class CSurfTimerService : CSurfBaseService {
 public:
 	using CSurfBaseService::CSurfBaseService;
 
+	void DoTimerStart(bool playSound = true);
+	void DoTimerEnd();
+
+public:
 	bool m_bTimerRunning {};
 	f64 m_fCurrentTime {};
 	f64 m_fLastEndTime {};
@@ -25,8 +32,13 @@ public:
 	i32 m_iCurrentStage {};
 
 	bool m_bPaused {};
-
-public:
-	void DoTimerStart(bool playSound = true);
-	void DoTimerEnd();
 };
+
+namespace SURF {
+	extern CSurfTimerPlugin* TimerPlugin();
+
+	void FormatTime(f64 time, char* output, u32 length, bool precise = true);
+	CUtlString FormatTime(f64 time, bool precise = true);
+	void FormatDiffTime(f64 time, char* output, u32 length, bool precise = true);
+	CUtlString FormatDiffTime(f64 time, bool precise = true);
+} // namespace SURF

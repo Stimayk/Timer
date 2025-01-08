@@ -4,11 +4,9 @@
 
 CSurfReplayPlugin g_SurfReplay;
 
-CSurfReplayPlugin* GetReplayPlugin() {
+CSurfReplayPlugin* SURF::ReplayPlugin() {
 	return &g_SurfReplay;
 }
-
-extern void DoPlayback(CCSPlayerPawn* botPawn, CCSBot* pBot);
 
 void CSurfReplayPlugin::OnPluginStart() {}
 

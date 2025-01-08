@@ -1,7 +1,7 @@
 #include "logger.h"
 
 void LOG::Setup(Color color) {
-	g_iChannelID = LoggingSystem_RegisterLoggingChannel("cs2surf", nullptr, 0, LV_DEFAULT, color);
+	g_iLogColor = color;
 }
 
 void LOG::Setup(uint32_t color32) {

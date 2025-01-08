@@ -1,0 +1,7 @@
+{
+    "global_key": "",
+    "zone_helper_key": "",
+    "endpoints": {
+        "auth": "/auth"
+    }
+}

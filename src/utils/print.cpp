@@ -102,13 +102,13 @@ static bool HasEnoughSpace(const CFormatContext* ctx, uintptr_t space) {
 }
 
 static CFormatResult EscapeChars(CFormatContext* ctx) {
-	if (*ctx->current == '{' && *(ctx->current + 1) == '{') {
+	if (*ctx->current == '[' && *(ctx->current + 1) == '[') {
 		if (!HasEnoughSpace(ctx, 1)) {
 			return CFORMAT_OUT_OF_SPACE;
 		}
 
 		ctx->current += 2;
-		*ctx->result++ = '{';
+		*ctx->result++ = '[';
 		return CFORMAT_OK;
 	}
 	return CFORMAT_NOT_US;
@@ -116,13 +116,13 @@ static CFormatResult EscapeChars(CFormatContext* ctx) {
 
 static CFormatResult ParseColors(CFormatContext* ctx) {
 	const char* current = ctx->current;
-	if (*current == '{') {
+	if (*current == '[') {
 		current++;
 		const char* start = current;
-		while (*current && *current != '}') {
+		while (*current && *current != ']') {
 			current++;
 		}
-		if (*current == '}') {
+		if (*current == ']') {
 			int length = current - start;
 			current++;
 			if (char byte = ConvertColorStringToByte(start, length); byte) {

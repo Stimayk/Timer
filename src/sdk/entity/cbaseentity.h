@@ -6,6 +6,14 @@
 #include <libmem/libmem_virtual.h>
 #include <sdk/entity/ccollisionproperty.h>
 
+enum S2EdictState {
+	FL_EDICT_FULL_S2 = 0x1,
+	FL_FULL_EDICT_CHANGED_S2 = 0x2,
+	FL_EDICT_ALWAYS_S2 = 0x4,
+	FL_EDICT_DONTSEND_S2 = 0x8,
+	FL_EDICT_PVSCHECK_S2 = 0x10,
+};
+
 enum class PlayerAnimEvent_t : uint32_t {
 	PLAYERANIMEVENT_FIRE_GUN_PRIMARY = 0x0,
 	PLAYERANIMEVENT_FIRE_GUN_SECONDARY = 0x1,
@@ -51,23 +59,23 @@ public:
 	SCHEMA_FIELD(uint16, m_cellZ);
 	SCHEMA_FIELD(uint16, m_nOutsideWorld);
 
-	SCHEMA_FIELD(CNetworkedQuantizedFloat, m_vecX);
-	SCHEMA_FIELD(CNetworkedQuantizedFloat, m_vecY);
-	SCHEMA_FIELD(CNetworkedQuantizedFloat, m_vecZ);
+	SCHEMA_FIELD(float, m_vecX);
+	SCHEMA_FIELD(float, m_vecY);
+	SCHEMA_FIELD(float, m_vecZ);
 };
 
 class CNetworkVelocityVector {
 public:
 	DECLARE_SCHEMA_CLASS_INLINE(CNetworkVelocityVector);
 
-	SCHEMA_FIELD(CNetworkedQuantizedFloat, m_vecX);
-	SCHEMA_FIELD(CNetworkedQuantizedFloat, m_vecY);
-	SCHEMA_FIELD(CNetworkedQuantizedFloat, m_vecZ);
+	SCHEMA_FIELD(float, m_vecX);
+	SCHEMA_FIELD(float, m_vecY);
+	SCHEMA_FIELD(float, m_vecZ);
 };
 
 class CGameSceneNode {
 public:
-	DECLARE_SCHEMA_CLASS(CGameSceneNode)
+	DECLARE_SCHEMA_CLASS(CGameSceneNode);
 
 	SCHEMA_FIELD(CEntityInstance*, m_pOwner);
 	SCHEMA_FIELD(CGameSceneNode*, m_pParent);
@@ -120,6 +128,7 @@ public:
 	SCHEMA_FIELD(CCollisionProperty*, m_pCollision);
 	SCHEMA_FIELD(CHandle<CBaseEntity>, m_hGroundEntity);
 	SCHEMA_FIELD(uint32_t, m_fFlags);
+	SCHEMA_FIELD(int32_t, m_iEFlags);
 	SCHEMA_FIELD(float, m_flGravityScale);
 	SCHEMA_FIELD(float, m_flWaterLevel);
 	SCHEMA_FIELD(int, m_fEffects);
@@ -249,8 +258,6 @@ public:
 class CPointWorldText : public CModelPointEntity {
 public:
 	DECLARE_SCHEMA_CLASS(CPointWorldText);
-
-	SCHEMA_FIELD_POINTER(char, m_messageText);
 
 	void SetText(const char* msg) {
 		AcceptInput("SetMessage", msg);

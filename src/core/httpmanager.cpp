@@ -60,21 +60,22 @@ void HTTP::GetPublicIP(IPv4Response callback) {
 	}
 
 	ipv4 = UTIL::GetPublicIP();
-	if (ipv4.empty()) {
-		Get("http://whatismyip.akamai.com", [callback](const HttpResponsePtr& res) {
-			if (!res || res->status_code != 200) {
-				return;
-			}
-
-			if (!ipv4.empty()) {
-				callback(ipv4);
-				return;
-			}
-
-			ipv4 = res->Body();
-			callback(ipv4);
-		});
-
+	if (!ipv4.empty()) {
+		callback(ipv4);
 		return;
 	}
+
+	Get("http://whatismyip.akamai.com", [callback](const HttpResponsePtr& res) {
+		if (!res || res->status_code != 200) {
+			return;
+		}
+
+		if (!ipv4.empty()) {
+			callback(ipv4);
+			return;
+		}
+
+		ipv4 = res->Body();
+		callback(ipv4);
+	});
 }

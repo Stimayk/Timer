@@ -12,26 +12,22 @@ struct ReplayFrame_t {
 };
 
 class CSurfReplayService : CSurfBaseService {
+private:
+	virtual void Reset() override;
+
+public:
 	using CSurfBaseService::CSurfBaseService;
 
-	virtual void Reset() override;
+	void StartRecord();
+	void DoRecord(CCSPlayerPawn* pawn, const CPlayerButton* buttons, const QAngle& viewAngles);
+	void SaveRecord();
 
 public:
 	bool m_bEnabled;
 	std::vector<ReplayFrame_t> m_vReplayFrames;
-
-public:
-	void StartRecord();
-	void DoRecord(CCSPlayerPawn* pawn, const CPlayerButton* buttons, const QAngle& viewAngles);
-	void SaveRecord();
 };
 
 class CSurfReplayPlugin : CSurfForward, CMovementForward, CCoreForward {
-public:
-	std::unordered_map<uint32_t, std::vector<ReplayFrame_t>> m_umTrackReplays;
-	std::unordered_map<uint32_t, std::vector<ReplayFrame_t>> m_umStageReplays;
-	std::array<uint32_t, MAXPLAYERS> m_iCurrentTick;
-
 private:
 	virtual void OnPluginStart() override;
 	virtual void OnPlayerRunCmdPost(CCSPlayerPawn* pawn, const CPlayerButton* buttons, const float (&vec)[3], const QAngle& viewAngles,
@@ -39,6 +35,16 @@ private:
 
 	virtual bool OnEnterZone(const ZoneCache_t& zone, CSurfPlayer* player) override;
 	virtual bool OnLeaveZone(const ZoneCache_t& zone, CSurfPlayer* player) override;
+
+private:
+	void DoPlayback(CCSPlayerPawn* botPawn, CCSBot* pBot);
+
+public:
+	std::unordered_map<uint32_t, std::vector<ReplayFrame_t>> m_umTrackReplays;
+	std::unordered_map<uint32_t, std::vector<ReplayFrame_t>> m_umStageReplays;
+	std::array<uint32_t, MAXPLAYERS> m_iCurrentTick;
 };
 
-extern CSurfReplayPlugin* GetReplayPlugin();
+namespace SURF {
+	extern CSurfReplayPlugin* ReplayPlugin();
+} // namespace SURF

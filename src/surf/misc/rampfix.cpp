@@ -12,6 +12,7 @@ constexpr auto RAMP_BUG_VELOCITY_THRESHOLD = 0.95f;
 constexpr auto NEW_RAMP_THRESHOLD = 0.95f;
 
 class CRampfix : CMovementForward {
+private:
 	virtual bool OnProcessMovement(CCSPlayer_MovementServices* ms, CMoveData* mv) override;
 	virtual void OnProcessMovementPost(CCSPlayer_MovementServices* ms, const CMoveData* mv) override;
 	virtual bool OnTryPlayerMove(CCSPlayer_MovementServices* ms, CMoveData* mv, Vector* pFirstDest, trace_t* pFirstTrace) override;

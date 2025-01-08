@@ -10,6 +10,10 @@
 
 class CServerSideClient;
 
+#define FORWARD_INIT(forwardClass) \
+	template<> \
+	forwardClass* CBaseForward<forwardClass>::m_pFirst = nullptr;
+
 #define FORWARD_POST(forwardClass, forwardFn, ...) \
 	for (auto p = forwardClass::m_pFirst; p; p = p->m_pNext) { \
 		p->forwardFn(__VA_ARGS__); \
@@ -47,9 +51,13 @@ public:
 
 	virtual void OnClientVoice(ISource2GameClients* pClient, CPlayerSlot slot) {}
 
-	virtual void OnClientCommand(ISource2GameClients* pClient, CPlayerSlot slot, const CCommand& args) {}
+	virtual bool OnClientCommand(ISource2GameClients* pClient, CPlayerSlot slot, const CCommand& args) {
+		return true;
+	}
 
-	virtual void OnDispatchConCommand(ICvar* pCvar, ConCommandHandle cmd, const CCommandContext& ctx, const CCommand& args) {}
+	virtual bool OnDispatchConCommand(ICvar* pCvar, ConCommandHandle cmd, const CCommandContext& ctx, const CCommand& args) {
+		return true;
+	}
 
 	virtual void OnPostEventAbstract(IGameEventSystem* pEventSystem, CSplitScreenSlot nSlot, int nClientCount, const uint64* clients,
 									 INetworkMessageInternal* pEvent, const CNetMessage* pData) {}

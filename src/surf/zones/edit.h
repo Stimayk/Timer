@@ -55,14 +55,6 @@ struct CZoneEditProperty : ZoneData_t {
 	void Init(CSurfZoneService* outer);
 	void Reset();
 
-	CSurfZoneService* m_pOuter;
-	bool m_bEnabled;
-	ZoneEditStep m_iStep;
-	std::vector<CHandle<CBeam>> m_vBeam;
-
-	static constexpr const int m_iZonePairs2D[][2] = {{0, 1}, {1, 2}, {2, 3}, {3, 0}};
-	static constexpr const int m_iZonePairs3D[][2] = {{0, 2}, {2, 6}, {6, 4}, {4, 0}, {0, 1}, {3, 1}, {3, 2}, {3, 7}, {5, 1}, {5, 4}, {6, 7}, {7, 5}};
-
 	void StartEditZone();
 	void CreateEditZone(const Vector& playerAim);
 	void UpdateZone(const Vector& playerAim);
@@ -71,4 +63,12 @@ struct CZoneEditProperty : ZoneData_t {
 	void UpdateZone2D(const std::vector<CHandle<CBeam>>& vBeams, const Vector& vecMin, const Vector& vecMax);
 	void UpdateZone3D(const std::vector<CHandle<CBeam>>& vBeams, const Vector& vecMin, const Vector& vecMax);
 	void ClearBeams();
+
+	CSurfZoneService* m_pOuter;
+	bool m_bEnabled;
+	ZoneEditStep m_iStep;
+	std::vector<CHandle<CBeam>> m_vBeam;
+
+	static constexpr const int m_iZonePairs2D[][2] = {{0, 1}, {1, 2}, {2, 3}, {3, 0}};
+	static constexpr const int m_iZonePairs3D[][2] = {{0, 2}, {2, 6}, {6, 4}, {4, 0}, {0, 1}, {3, 1}, {3, 2}, {3, 7}, {5, 1}, {5, 4}, {6, 7}, {7, 5}};
 };

@@ -26,3 +26,8 @@ public:
 		return true;
 	}
 };
+
+class CSurfGlobalForward : public CBaseForward<CSurfGlobalForward> {
+public:
+	virtual void OnInit() {}
+};

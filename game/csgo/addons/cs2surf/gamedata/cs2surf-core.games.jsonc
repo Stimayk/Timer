@@ -136,6 +136,36 @@
 				"opcode_length": 8,
 				"dereference": false
 			}
+		},
+		"AddDebugOverlayBits": {
+			"signature": "CMD_ShowTriggers",
+			"windows": {
+				"offset_func": 151,
+				"offset_opcode": 1,
+				"opcode_length": 5,
+				"dereference": false
+			},
+			"linux": {
+				"offset_func": 96,
+				"offset_opcode": 1,
+				"opcode_length": 5,
+				"dereference": false
+			}
+		},
+		"RemoveDebugOverlayBits": {
+			"signature": "CMD_ShowTriggers",
+			"windows": {
+				"offset_func": 158,
+				"offset_opcode": 1,
+				"opcode_length": 5,
+				"dereference": false
+			},
+			"linux": {
+				"offset_func": 174,
+				"offset_opcode": 1,
+				"opcode_length": 5,
+				"dereference": false
+			}
 		}
 	},
 	"Signature": {
@@ -298,6 +328,11 @@
 			"library": "engine2",
 			"windows": "40 53 57 48 83 EC ? 80 7A",
 			"linux": "55 48 89 E5 41 57 41 56 41 55 4C 8D AD ? ? ? ? 41 54 49 89 FC 53 48 8D 3D ? ? ? ? 48 89 F3 48 8D 35 ? ? ? ? 48 81 EC ? ? ? ? E8"
+		},
+		"CMD_ShowTriggers": {
+			"library": "server",
+			"windows": "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 33 F6 40 B7",
+			"linux": "55 48 89 E5 41 57 41 56 41 BE ? ? ? ? 41 55 41 54 53 48 83 EC ? 83 BE"
 		}
 	}
 }

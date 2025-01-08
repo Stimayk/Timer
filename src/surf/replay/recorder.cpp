@@ -16,7 +16,7 @@ void CSurfReplayService::DoRecord(CCSPlayerPawn* pawn, const CPlayerButton* butt
 }
 
 void CSurfReplayService::SaveRecord() {
-	auto plugin = GetReplayPlugin();
+	auto plugin = SURF::ReplayPlugin();
 	plugin->m_umTrackReplays[0] = m_vReplayFrames;
 	m_vReplayFrames.clear();
 	m_bEnabled = false;

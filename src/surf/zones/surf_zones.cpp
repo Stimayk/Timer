@@ -3,7 +3,6 @@
 #include <surf/api.h>
 #include <core/sdkhook.h>
 
-extern void RegisterCommand();
 bool Trigger_OnStartTouch(CBaseEntity* pSelf, CBaseEntity* pOther);
 void Trigger_OnStartTouchPost(CBaseEntity* pSelf, CBaseEntity* pOther);
 void Trigger_OnTouchPost(CBaseEntity* pSelf, CBaseEntity* pOther);
@@ -13,7 +12,7 @@ void Trigger_OnEndTouchPost(CBaseEntity* pSelf, CBaseEntity* pOther);
 
 CSurfZonePlugin g_SurfZonePlugin;
 
-CSurfZonePlugin* SurfZonePlugin() {
+CSurfZonePlugin* SURF::ZonePlugin() {
 	return &g_SurfZonePlugin;
 }
 
@@ -96,7 +95,7 @@ void CSurfZoneService::AddZone(const Vector& vecMin, const Vector& vecMax) {
 	cache.m_iType = m_ZoneEdit.m_iType;
 	cache.m_iValue = m_ZoneEdit.m_iValue;
 
-	SurfZonePlugin()->m_hZones[hRefZone] = cache;
+	SURF::ZonePlugin()->m_hZones[hRefZone] = cache;
 }
 
 void CSurfZoneService::EditZone(CCSPlayerPawnBase* pawn, const CPlayerButton* buttons) {
@@ -204,7 +203,7 @@ bool Trigger_OnStartTouch(CBaseEntity* pSelf, CBaseEntity* pOther) {
 	}
 
 	// if not our zone, ignore endtouch fix
-	auto res = SurfZonePlugin()->FindZone(pSelf);
+	auto res = SURF::ZonePlugin()->FindZone(pSelf);
 	if (!res.has_value()) {
 		return true;
 	}
@@ -240,7 +239,7 @@ void Trigger_OnStartTouchPost(CBaseEntity* pSelf, CBaseEntity* pOther) {
 		return;
 	}
 
-	auto res = SurfZonePlugin()->FindZone(pSelf);
+	auto res = SURF::ZonePlugin()->FindZone(pSelf);
 	if (!res.has_value()) {
 		return;
 	}
@@ -263,7 +262,7 @@ void Trigger_OnTouchPost(CBaseEntity* pSelf, CBaseEntity* pOther) {
 		return;
 	}
 
-	auto res = SurfZonePlugin()->FindZone(pSelf);
+	auto res = SURF::ZonePlugin()->FindZone(pSelf);
 	if (!res.has_value()) {
 		return;
 	}
@@ -282,7 +281,7 @@ void Trigger_OnEndTouchPost(CBaseEntity* pSelf, CBaseEntity* pOther) {
 		return;
 	}
 
-	auto res = SurfZonePlugin()->FindZone(pSelf);
+	auto res = SURF::ZonePlugin()->FindZone(pSelf);
 	if (!res.has_value()) {
 		return;
 	}

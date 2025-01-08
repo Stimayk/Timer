@@ -1,4 +1,4 @@
 #include "api.h"
 
-template<>
-CSurfForward* CBaseForward<CSurfForward>::m_pFirst = nullptr;
+FORWARD_INIT(CSurfForward);
+FORWARD_INIT(CSurfGlobalForward);

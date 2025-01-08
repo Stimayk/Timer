@@ -166,8 +166,14 @@ static void Hook_ClientVoice(ISource2GameClients* pThis, CPlayerSlot slot) {
 }
 
 static void Hook_ClientCommand(ISource2GameClients* pThis, CPlayerSlot slot, const CCommand& args) {
+	bool bBlock = false;
 	for (auto p = CCoreForward::m_pFirst; p; p = p->m_pNext) {
-		p->OnClientCommand(pThis, slot, args);
+		if (!p->OnClientCommand(pThis, slot, args)) {
+			bBlock = true;
+		}
+	}
+	if (bBlock) {
+		return;
 	}
 
 	MEM::SDKCall(MEM::TRAMPOLINE::g_fnClientCommand, pThis, slot, &args);
@@ -187,8 +193,14 @@ static void Hook_StartupServer(INetworkServerService* pThis, const GameSessionCo
 }
 
 static void Hook_DispatchConCommand(ICvar* pThis, ConCommandHandle cmd, const CCommandContext& ctx, const CCommand& args) {
+	bool block = false;
 	for (auto p = CCoreForward::m_pFirst; p; p = p->m_pNext) {
-		p->OnDispatchConCommand(pThis, cmd, ctx, args);
+		if (!p->OnDispatchConCommand(pThis, cmd, ctx, args)) {
+			block = true;
+		}
+	}
+	if (block) {
+		return;
 	}
 
 	MEM::SDKCall(MEM::TRAMPOLINE::g_fnDispatchConCommand, pThis, cmd, &ctx, &args);

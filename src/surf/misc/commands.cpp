@@ -5,7 +5,7 @@
 #include <surf/misc/showtrigger.h>
 #include <surf/misc/hide.h>
 
-static void Command_Hide(CCSPlayerController* pController, const std::vector<std::string>& vArgs) {
+CCMD_CALLBACK(Command_Hide) {
 	CSurfPlayer* player = SURF::GetPlayerManager()->ToPlayer(pController);
 	if (!player) {
 		return;
@@ -20,15 +20,38 @@ static void Command_Hide(CCSPlayerController* pController, const std::vector<std
 		if (pTargetController && pTargetController->GetPlayerSlot() != pController->GetPlayerSlot()) {
 			CCSPlayerPawn* pTargetPawn = pTargetController->GetPlayerPawn();
 			if (pTargetPawn) {
-				HidePlugin()->Set(pController, pTargetPawn, pMiscService->m_bHide);
+				SURF::MISC::HidePlugin()->Set(pController, pTargetPawn, pMiscService->m_bHide);
 			}
 		}
 	}
 
-	UTIL::PrintChat(pController, "%s 其他玩家\n", pMiscService->m_bHide ? "已隐藏" : "已显示");
+	UTIL::PrintChat(pController, "[其他玩家] %s\n", pMiscService->m_bHide ? "已隐藏" : "已显示");
 }
 
-static void Command_HideLegs(CCSPlayerController* pController, const std::vector<std::string>& vArgs) {
+CCMD_CALLBACK(Command_HideWeapons) {
+	CSurfPlayer* player = SURF::GetPlayerManager()->ToPlayer(pController);
+	if (!player) {
+		return;
+	}
+
+	auto pViewModelService = pController->GetPlayerPawn()->m_pViewModelServices();
+	if (!pViewModelService) {
+		return;
+	}
+
+	auto pViewModel = pViewModelService->GetViewModel(0);
+	if (!pViewModel) {
+		return;
+	}
+
+	auto& pMiscService = player->m_pMiscService;
+	pMiscService->m_bHideWeapons = !pMiscService->m_bHideWeapons;
+	SURF::MISC::HidePlugin()->Set(pController, pViewModel, pMiscService->m_bHideWeapons);
+
+	UTIL::PrintChat(pController, "[武器] %s\n", pMiscService->m_bHideWeapons ? "已隐藏" : "已显示");
+}
+
+CCMD_CALLBACK(Command_HideLegs) {
 	CSurfPlayer* player = SURF::GetPlayerManager()->ToPlayer(pController);
 	if (!player) {
 		return;
@@ -37,10 +60,10 @@ static void Command_HideLegs(CCSPlayerController* pController, const std::vector
 	auto& pMiscService = player->m_pMiscService;
 	pMiscService->m_bHideLegs = !pMiscService->m_bHideLegs;
 
-	UTIL::PrintChat(pController, "%s 腿部\n", pMiscService->m_bHideLegs ? "已隐藏" : "已显示");
+	UTIL::PrintChat(pController, "[腿部] %s\n", pMiscService->m_bHideLegs ? "已隐藏" : "已显示");
 }
 
-static void Command_ShowTrigger(CCSPlayerController* pController, const std::vector<std::string>& vArgs) {
+CCMD_CALLBACK(Command_ShowTrigger) {
 	CSurfPlayer* player = SURF::GetPlayerManager()->ToPlayer(pController);
 	if (!player) {
 		return;
@@ -50,12 +73,19 @@ static void Command_ShowTrigger(CCSPlayerController* pController, const std::vec
 	pMiscService->m_bShowTrigger = !pMiscService->m_bShowTrigger;
 
 	UTIL::PrintChat(pController, "[显示区域] %s\n", pMiscService->m_bShowTrigger ? "已打开" : "已关闭");
+	if (pMiscService->m_bShowTrigger) {
+		UTIL::PrintChat(pController, "请控制台输入 cl_debug_overlays_broadcast 1\n");
+	}
 
-	g_ShowTrigger.TransmitTriggers(SurfMiscPlugin()->m_vTriggers, pMiscService->m_bShowTrigger);
+	SURF::MISC::ShowTriggerPlugin()->TransmitTriggers(SURF::MiscPlugin()->m_vTriggers, pMiscService->m_bShowTrigger);
 }
 
-void RegisterCommands() {
+void CSurfMiscPlugin::RegisterCommands() {
 	CONCMD::RegConsoleCmd("sm_hide", Command_Hide);
+	CONCMD::RegConsoleCmd("sm_hw", Command_HideWeapons);
+	CONCMD::RegConsoleCmd("sm_hideweapon", Command_HideWeapons);
+	CONCMD::RegConsoleCmd("sm_hideweapons", Command_HideWeapons);
+	CONCMD::RegConsoleCmd("sm_hl", Command_HideLegs);
 	CONCMD::RegConsoleCmd("sm_hideleg", Command_HideLegs);
 	CONCMD::RegConsoleCmd("sm_hidelegs", Command_HideLegs);
 	CONCMD::RegConsoleCmd("sm_st", Command_ShowTrigger);

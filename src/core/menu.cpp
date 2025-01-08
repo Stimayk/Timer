@@ -6,6 +6,8 @@
 
 #include <fmt/format.h>
 
+extern void SetMenuEntityTransmiter(CBaseEntity* pMenu, CBasePlayerController* pOwner);
+
 constexpr float g_fMenuOffsetX = -11.6f;
 constexpr float g_fMenuOffsetY = -6.1f;
 
@@ -146,6 +148,7 @@ void CWorldTextMenu::Display(CCSPlayerPawnBase* pPawn, int iPageIndex) {
 
 	pMenuEntity->SetText(sMenuText.c_str());
 	pMenuEntity->Enable();
+	SetMenuEntityTransmiter(pMenuEntity, pPawn->GetController());
 
 	Vector& vmPos = pViewModel->GetAbsOrigin();
 	QAngle& vmAng = pViewModel->GetAbsAngles();
@@ -170,6 +173,12 @@ void CWorldTextMenu::Display(CCSPlayerPawnBase* pPawn, int iPageIndex) {
 		return;
 	}
 
+	pMenuBackground->SetParent(pViewModel);
+	pMenuBackground->m_hOwnerEntity(pViewModel->GetRefEHandle());
+
+	pMenuBackground->Enable();
+	SetMenuEntityTransmiter(pMenuBackground, pPawn->GetController());
+
 	Vector bgPos = GetAimPoint(vmPos, vmAng, 7.09f);
 	QAngle bgAng = vmAng;
 	bgAng.y -= 90.0f;
@@ -182,11 +191,6 @@ void CWorldTextMenu::Display(CCSPlayerPawnBase* pPawn, int iPageIndex) {
 
 	bgPos += rig + dwn;
 	pMenuBackground->Teleport(&bgPos, &bgAng, nullptr);
-
-	pMenuBackground->SetParent(pViewModel);
-	pMenuBackground->m_hOwnerEntity(pViewModel->GetRefEHandle());
-
-	pMenuBackground->Enable();
 }
 
 std::string CBaseMenu::GetItem(int iPageIndex, int iItemIndex) {

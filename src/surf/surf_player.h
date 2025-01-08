@@ -9,6 +9,7 @@ class CSurfZoneService;
 class CSurfHudService;
 class CSurfReplayService;
 class CSurfMiscService;
+class CSurfGlobalAPIService;
 
 class CSurfBaseService {
 public:
@@ -57,6 +58,7 @@ public:
 	std::unique_ptr<CSurfHudService, ServiceDeleter> m_pHudService;
 	std::unique_ptr<CSurfReplayService, ServiceDeleter> m_pReplayService;
 	std::unique_ptr<CSurfMiscService, ServiceDeleter> m_pMiscService;
+	std::unique_ptr<CSurfGlobalAPIService, ServiceDeleter> m_pGlobalAPIService;
 
 public:
 	bool m_bJustTeleported;
@@ -102,9 +104,4 @@ private:
 
 namespace SURF {
 	extern CSurfPlayerManager* GetPlayerManager();
-
-	void FormatTime(f64 time, char* output, u32 length, bool precise = true);
-	CUtlString FormatTime(f64 time, bool precise = true);
-	void FormatDiffTime(f64 time, char* output, u32 length, bool precise = true);
-	CUtlString FormatDiffTime(f64 time, bool precise = true);
 } // namespace SURF

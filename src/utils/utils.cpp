@@ -170,7 +170,7 @@ void UTIL::GetPlayerAiming(CCSPlayerPawnBase* pPlayer, CGameTrace& ret) {
 	AngleVectors(pPlayer->m_angEyeAngles(), &forward);
 	Vector to = from + forward * MAX_COORD_FLOAT;
 
-	TraceLine(from, to, pPlayer, &ret, MASK_SOLID, CONTENTS_TRIGGER | CONTENTS_PLAYER);
+	TraceLine(from, to, pPlayer, &ret, MASK_SOLID, CONTENTS_TRIGGER | CONTENTS_PLAYER | CONTENTS_PLAYER_CLIP);
 }
 
 CBaseEntity* UTIL::FindEntityByClassname(CEntityInstance* start, const char* name) {

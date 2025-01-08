@@ -167,30 +167,32 @@ static void Hook_OnTeleport(CBaseEntity* pEnt, void* pCallback, bool post) {
 
 template<SDKHookType T>
 bool SDKHOOK::HookEntity(CBaseEntity* pEnt, typename SDKHookBindings<T>::Type pFn) {
+	auto pBind = (void*&)pFn;
+
 	switch (T) {
 		case SDKHook_StartTouch:
-			::Hook_OnStartTouch(pEnt, (void*)pFn, false);
+			::Hook_OnStartTouch(pEnt, pBind, false);
 			break;
 		case SDKHook_StartTouchPost:
-			::Hook_OnStartTouch(pEnt, (void*)pFn, true);
+			::Hook_OnStartTouch(pEnt, pBind, true);
 			break;
 		case SDKHook_Touch:
-			::Hook_OnTouch(pEnt, (void*)pFn, false);
+			::Hook_OnTouch(pEnt, pBind, false);
 			break;
 		case SDKHook_TouchPost:
-			::Hook_OnTouch(pEnt, (void*)pFn, true);
+			::Hook_OnTouch(pEnt, pBind, true);
 			break;
 		case SDKHook_EndTouch:
-			::Hook_OnEndTouch(pEnt, (void*)pFn, false);
+			::Hook_OnEndTouch(pEnt, pBind, false);
 			break;
 		case SDKHook_EndTouchPost:
-			::Hook_OnEndTouch(pEnt, (void*)pFn, true);
+			::Hook_OnEndTouch(pEnt, pBind, true);
 			break;
 		case SDKHook_Teleport:
-			::Hook_OnTeleport(pEnt, (void*)pFn, false);
+			::Hook_OnTeleport(pEnt, pBind, false);
 			break;
 		case SDKHook_TeleportPost:
-			::Hook_OnTeleport(pEnt, (void*)pFn, true);
+			::Hook_OnTeleport(pEnt, pBind, true);
 			break;
 		default:
 			return false;

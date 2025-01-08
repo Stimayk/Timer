@@ -1,6 +1,7 @@
 #include <core/memory.h>
 
 class CMovementUnlocker : CCoreForward {
+private:
 	virtual void OnPluginStart() override;
 };
 

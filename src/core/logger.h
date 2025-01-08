@@ -5,48 +5,38 @@
 #include <type_traits>
 
 namespace LOG {
-	inline LoggingChannelID_t g_iChannelID = INVALID_LOGGING_CHANNEL_ID;
+	inline Color g_iLogColor;
 
 	void Setup(Color color);
 	void Setup(uint32_t color32);
 
 	template<typename... Args>
-	std::enable_if_t<sizeof...(Args) == 0, LoggingResponse_t> Print(const char* fmt) {
-		return LoggingSystem_Log(g_iChannelID, LS_MESSAGE, "%s", fmt);
+	std::enable_if_t<sizeof...(Args) == 0, void> Print(const char* fmt) {
+		::ConColorMsg(g_iLogColor, "%s\n", fmt);
 	}
 
 	template<typename... Args>
-	std::enable_if_t<sizeof...(Args) != 0, LoggingResponse_t> Print(const char* fmt, Args... args) {
-		return LoggingSystem_Log(g_iChannelID, LS_MESSAGE, fmt, args...);
+	std::enable_if_t<sizeof...(Args) != 0, void> Print(const char* fmt, Args... args) {
+		::ConColorMsg(g_iLogColor, fmt, args...);
 	}
 
 	template<typename... Args>
-	std::enable_if_t<sizeof...(Args) == 0, LoggingResponse_t> PrintAssert(const char* fmt) {
-		return LoggingSystem_LogAssert("%s", fmt);
+	std::enable_if_t<sizeof...(Args) == 0, void> Warning(const char* fmt) {
+		::Warning("%s\n", fmt);
 	}
 
 	template<typename... Args>
-	std::enable_if_t<sizeof...(Args) != 0, LoggingResponse_t> PrintAssert(const char* fmt, Args... args) {
-		return LoggingSystem_LogAssert(fmt, args...);
+	std::enable_if_t<sizeof...(Args) != 0, void> Warning(const char* fmt, Args... args) {
+		::Warning(fmt, args...);
 	}
 
 	template<typename... Args>
-	std::enable_if_t<sizeof...(Args) == 0, LoggingResponse_t> PrintWarning(const char* fmt) {
-		return LoggingSystem_Log(g_iChannelID, LS_WARNING, "%s", fmt);
+	std::enable_if_t<sizeof...(Args) == 0, void> Error(const char* fmt) {
+		::Error("%s\n", fmt);
 	}
 
 	template<typename... Args>
-	std::enable_if_t<sizeof...(Args) != 0, LoggingResponse_t> PrintWarning(const char* fmt, Args... args) {
-		return LoggingSystem_Log(g_iChannelID, LS_WARNING, fmt, args...);
-	}
-
-	template<typename... Args>
-	std::enable_if_t<sizeof...(Args) == 0, LoggingResponse_t> PrintError(const char* fmt) {
-		return LoggingSystem_Log(g_iChannelID, LS_ERROR, "%s", fmt);
-	}
-
-	template<typename... Args>
-	std::enable_if_t<sizeof...(Args) != 0, LoggingResponse_t> PrintError(const char* fmt, Args... args) {
-		return LoggingSystem_Log(g_iChannelID, LS_ERROR, fmt, args...);
+	std::enable_if_t<sizeof...(Args) != 0, void> Error(const char* fmt, Args... args) {
+		::Error(fmt, args...);
 	}
 } // namespace LOG

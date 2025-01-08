@@ -1,15 +1,15 @@
-#include <surf/replay/surf_replay.h>
+#include "surf_replay.h"
 #include <utils/utils.h>
 
-void DoPlayback(CCSPlayerPawn* pBotPawn, CCSBot* pBot) {
-	auto& aFrames = GetReplayPlugin()->m_umTrackReplays[0];
+void CSurfReplayPlugin::DoPlayback(CCSPlayerPawn* pBotPawn, CCSBot* pBot) {
+	auto& aFrames = m_umTrackReplays[0];
 	auto iFrameSize = aFrames.size();
 	if (iFrameSize == 0) {
 		return;
 	}
 
 	auto slot = pBotPawn->GetController()->GetPlayerSlot();
-	auto& currentTick = GetReplayPlugin()->m_iCurrentTick.at(slot);
+	auto& currentTick = m_iCurrentTick.at(slot);
 	if (currentTick >= iFrameSize) {
 		currentTick = 0;
 	}

@@ -41,8 +41,6 @@ static void OnRoundStart(IGameEvent* pEvent, const char* szName, bool bDontBroad
 		gameRules->m_fRoundStartTime().SetTime(0.0f);
 		gameRules->m_flGameStartTime().SetTime(0.0f);
 	}
-
-	SurfMiscPlugin()->FindTriggers();
 }
 
 static void OnPlayerTeam(IGameEvent* pEvent, const char* szName, bool bDontBroadcast) {
@@ -77,7 +75,7 @@ static void OnPlayerSpawm(IGameEvent* pEvent, const char* szName, bool bDontBroa
 	});
 }
 
-void HookEvents() {
+void CSurfMiscPlugin::HookEvents() {
 	EVENT::HookEvent("player_death", ::OnPlayerDeath);
 	EVENT::HookEvent("round_prestart", ::OnRoundPrestart);
 	EVENT::HookEvent("round_start", ::OnRoundStart);

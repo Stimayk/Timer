@@ -3,6 +3,7 @@
 constexpr auto m_vecVelocity_maxValue = 10000.0f;
 
 class CMaxVelocityFix : CCoreForward {
+private:
 	virtual void OnPluginStart() override;
 };
 
