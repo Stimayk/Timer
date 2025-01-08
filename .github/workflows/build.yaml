@@ -40,7 +40,7 @@ jobs:
           sudo mv /usr/bin/openssl /usr/bin/openssl-backup
 
       - name: Verify OpenSSL version
-        run: openssl version
+        run: /usr/local/openssl-3.0.13/bin/openssl version
 
       - name: Update version header
         run: |
