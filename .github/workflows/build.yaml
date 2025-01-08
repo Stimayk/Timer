@@ -35,6 +35,10 @@ jobs:
           echo "OPENSSL_LIBRARIES=/usr/local/openssl-3.0.13/lib" | sudo tee -a /etc/environment
           source /etc/environment
 
+      - name: Remove old OpenSSL binary
+        run: |
+          sudo mv /usr/bin/openssl /usr/bin/openssl-backup
+
       - name: Verify OpenSSL version
         run: openssl version
 
