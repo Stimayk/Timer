@@ -22,7 +22,11 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y build-essential checkinstall zlib1g-dev
-          curl -O https://www.openssl.org/source/openssl-3.0.13.tar.gz
+          wget https://www.openssl.org/source/openssl-3.0.13.tar.gz
+          if [ $(sha256sum openssl-3.0.13.tar.gz | awk '{print $1}') != "4bc5f4a78b0d8e0b5b44da5a194ed40296dc7d320b0c89664385587b175dca5b" ]; then
+            echo "Checksum verification failed!" >&2
+            exit 1
+          fi
           tar -xzf openssl-3.0.13.tar.gz
           cd openssl-3.0.13
           ./config --prefix=/usr/local/openssl-3.0.13 --openssldir=/usr/local/openssl-3.0.13
