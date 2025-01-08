@@ -30,7 +30,10 @@ jobs:
           sudo make install
           echo "/usr/local/openssl-3.0.13/lib" | sudo tee -a /etc/ld.so.conf.d/openssl-3.0.13.conf
           sudo ldconfig
-          export PATH=/usr/local/openssl-3.0.13/bin:$PATH
+          echo "PATH=/usr/local/openssl-3.0.13/bin:\$PATH" | sudo tee -a /etc/environment
+          echo "OPENSSL_ROOT_DIR=/usr/local/openssl-3.0.13" | sudo tee -a /etc/environment
+          echo "OPENSSL_LIBRARIES=/usr/local/openssl-3.0.13/lib" | sudo tee -a /etc/environment
+          source /etc/environment
 
       - name: Verify OpenSSL version
         run: openssl version
