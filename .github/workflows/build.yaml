@@ -9,54 +9,34 @@ on:
 
 jobs:
   build-linux:
-    name: Linux
+    name: Build for Linux
     runs-on: ubuntu-latest
     container: registry.gitlab.steamos.cloud/steamrt/sniper/sdk
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           submodules: recursive
           lfs: false
 
-      - name: Checkout Metamod
-        uses: actions/checkout@v4
-        with:
-          repository: alliedmodders/metamod-source
-          ref: master
-          path: mmsource-2.0
-          submodules: recursive
-
-      - name: Checkout HL2SDK
-        uses: actions/checkout@v4
-        with:
-          repository: alliedmodders/hl2sdk
-          ref: cs2
-          path: hl2sdk-cs2
-
-      - name: Checkout AMBuild
-        uses: actions/checkout@v4
-        with:
-          repository: alliedmodders/ambuild
-          path: ambuild
-
-      - name: Install AMBuild
+      - name: Update version header
         run: |
-          cd ambuild && python setup.py install && cd ..
+          echo "#define VERSION_STRING \"${{ inputs.version }}\"" > ./src/version.h
 
-      - name: Build
-        working-directory: .
-        shell: bash
+      - name: Setup Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Build with CMake
         run: |
-          mkdir build && cd build
-          python ../configure.py --enable-optimize --symbol-files --sdks cs2 --hl2sdk-manifests hl2sdk-manifests
-          ambuild
+          cmake -G Ninja -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER="clang" -DCMAKE_CXX_COMPILER="clang++"
+          cmake --build build
 
       - name: List build directory (Linux)
         run: ls ./build
 
-      - name: Archive build (Linux)
+      - name: Upload artifact (Linux)
         uses: actions/upload-artifact@v4
         with:
           name: cs2surf-linux
-          path: ./build/
+          path: ./build/cs2surf.so
