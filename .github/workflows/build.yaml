@@ -38,7 +38,7 @@ jobs:
         run: |
           export DEBIAN_FRONTEND=noninteractive
           sudo apt-get update -qy
-          sudo apt-get install -y git clang-10 clang++-10 binutils
+          sudo apt install -y clang libc++-dev libc++abi-dev cmake ninja-build
           sudo apt-get install -y python3
           python3 -m pip install --upgrade pip importlib-metadata
           python3 -m pip install setuptools==45.2.0
