@@ -59,7 +59,7 @@ jobs:
           mkdir -p build
           cd build
           cmake -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} .. \
-          cmake --build . --config ${{env.BUILD_TYPE}} --parallel 16
+          ninja -j16
 
       - name: Archive build (Linux)
         run: |
