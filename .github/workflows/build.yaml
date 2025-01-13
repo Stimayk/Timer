@@ -50,7 +50,13 @@ jobs:
           submodules: "recursive"
 
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential libssl-dev clang-15
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y software-properties-common wget # Required for adding repos
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -  
+          sudo add-apt-repository "deb http://apt.llvm.org/$(lsb_release -cs)/ llvm-toolchain-$(lsb_release -cs)-snapshot main"
+          sudo apt-get update
+          sudo apt-get install -y build-essential libssl-dev clang-15
 
       - name: Build with CMake
         run: |
