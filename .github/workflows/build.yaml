@@ -54,14 +54,11 @@ jobs:
 
       - name: Build with CMake
         run: |
+          export CC=clang-15
+          export CXX=clang++-15
           mkdir -p build
           cd build
           cmake -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} .. \
-            -DCMAKE_C_COMPILER="clang-15" \
-            -DCMAKE_CXX_COMPILER="clang++-15" \
-            -DOPENSSL_ROOT_DIR=/usr/local/openssl-3.0.13 \
-            -DOPENSSL_INCLUDE_DIR=/usr/local/openssl-3.0.13/include \
-            -DOPENSSL_LIBRARIES=/usr/local/openssl-3.0.13/lib
           cmake --build . --config ${{env.BUILD_TYPE}} -- -j16
 
       - name: Archive build (Linux)
