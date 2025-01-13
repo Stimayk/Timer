@@ -58,13 +58,12 @@ jobs:
           export CXX=clang++-15
           mkdir -p build
           cd build
-          cmake -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} .. \
-          cmake --build .
+          cmake -G Ninja -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} .. && cmake --build . # Corrected line
 
       - name: Archive build (Linux)
         run: |
           mkdir -p build/output
-          mv build/*.so build/output
+          mv build/*.so build/output  # Make sure this glob matches your built library
 
       - uses: actions/upload-artifact@v3
         with:
